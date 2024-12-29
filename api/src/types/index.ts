@@ -6,15 +6,17 @@ export const GET_TRADES = "GET_TRADES"
 
 
 export type MessageFromOrderbook = {
-    type: "ORDER_PLACED"
+    type: "ORDER_PLACED",
     payload: {
         orderId: string,
         executedQty: number,
-        fills: {
-            price: string,
-            qty: number,
-            tradeId: string
-        } []
+        fills: [
+            {
+                price: string,
+                qty: number,
+                tradeId: number
+            }
+        ]
     }
 } | {
     type: "ORDER_CANCELLED",
