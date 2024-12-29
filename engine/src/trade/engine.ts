@@ -58,7 +58,7 @@ export class Engine {
                     price: Number(price),
                     side,
                     filled: 0,
-                    quantity: 0,
+                    quantity: Number(quantity),
                     orderId: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
                     userId
                 }
