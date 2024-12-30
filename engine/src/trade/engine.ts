@@ -1,6 +1,6 @@
 import { RedisManager } from "../RedisManager";
 import { CREATE_ORDER, MessageFromApi } from "../types/fromApi";
-import { Order, OrderBook } from "./OrderBook";
+import { Fill, Order, OrderBook } from "./OrderBook";
 
 export const BASE_CURRENCY = "USD";
 
@@ -21,12 +21,20 @@ export class Engine {
             [BASE_CURRENCY]: {
                 available: 10000000,
                 locked: 0
+            },
+            "SOL": {
+                available: 0,
+                locked: 0
             }
         });
 
         this.balances.set("2", {
             "SOL": {
                 available: 10000000,
+                locked: 0
+            },
+            [BASE_CURRENCY]: {
+                available: 0,
                 locked: 0
             }
         });
@@ -67,6 +75,8 @@ export class Engine {
 
                 const {executedQty, fills} = orderbook.addOrder(order);
 
+                this.updateBalance(executedQty, side, baseAsset, quoteAsset, fills, userId);
+
                 return {orderId: order.orderId, executedQty, fills};
             }
 
@@ -89,6 +99,36 @@ export class Engine {
                     this.balances.get(userId)[baseAsset].available = this.balances.get(userId)?.[baseAsset].available - (Number(quantity));
                     //@ts-ignore
                     this.balances.get(userId)[baseAsset].locked = this.balances.get(userId)?.[baseAsset].locked + (Number(quantity));
+                }
+            }
+
+            updateBalance(executedQty: number, side: "buy" | "sell", baseAsset: string, quoteAsset: string, fills: Fill[], userId: string){
+                if(side=="buy"){
+                    fills.forEach((o) => {
+                        //@ts-ignore
+                        this.balances.get(userId)[baseAsset].available = this.balances.get(userId)?.[baseAsset].available + o.qty;
+                        //@ts-ignore
+                        this.balances.get(userId)[quoteAsset].locked = this.balances.get(userId)?.[quoteAsset].locked - o.qty * Number(o.price);
+                        //@ts-ignore
+                        this.balances.get(o.otherUserId)[baseAsset].locked = this.balances.get(o.otherUserId)?.[baseAsset].locked - o.qty;
+                        //@ts-ignore
+                        this.balances.get(o.otherUserId)[quoteAsset].available = this.balances.get(o.otherUserId)?.[quoteAsset].available + o.qty * Number(o.price);
+                    })
+                }else{
+                    fills.forEach((o) => {
+                        //@ts-ignore
+                        console.log(o.otherUserId, this.balances.get(o.otherUserId)[baseAsset]);
+                        //@ts-ignore
+                        this.balances.get(o.otherUserId)[baseAsset].available = this.balances.get(o.otherUserId)?.[baseAsset].available + o.qty;
+                        //@ts-ignore
+                        console.log(o.otherUserId, this.balances.get(o.otherUserId)[baseAsset]);
+                        //@ts-ignore
+                        this.balances.get(o.otherUserId)[quoteAsset].locked = this.balances.get(o.otherUserId)?.[quoteAsset].locked - o.qty * Number(o.price);
+                        //@ts-ignore
+                        this.balances.get(userId)[baseAsset].locked = this.balances.get(userId)?.[baseAsset].locked - o.qty;
+                        //@ts-ignore
+                        this.balances.get(userId)[quoteAsset].available = this.balances.get(userId)?.[quoteAsset].available + o.qty * Number(o.price);
+                    })
                 }
             }
 }
