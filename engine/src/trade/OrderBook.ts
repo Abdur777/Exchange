@@ -52,7 +52,7 @@ export class OrderBook {
                     fills
                 }
             }
-            order.quantity -= executedQty;
+            // order.quantity -= executedQty;
             this.bids.push(order);
             return {executedQty, fills};
         }else {
@@ -65,7 +65,7 @@ export class OrderBook {
                     fills
                 }
             }
-            order.quantity -= executedQty;
+            // order.quantity -= executedQty;
             this.asks.push(order);
             return {executedQty, fills};
         }
@@ -129,5 +129,67 @@ export class OrderBook {
             fills,
             executedQty
         };
+    }
+
+    cancelBid(order: Order) {
+        const index = this.bids.findIndex(x => x.orderId === order.orderId);
+        if (index !== -1) {
+            const price = this.bids[index].price;
+            this.bids.splice(index, 1);
+            return price
+        }
+    }
+
+    cancelAsk(order: Order) {
+        const index = this.asks.findIndex(x => x.orderId === order.orderId);
+        if (index !== -1) {
+            const price = this.asks[index].price;
+            this.asks.splice(index, 1);
+            return price
+        }
+    }
+
+    getOpenOrders(userId: string) : Order[] {
+        const openOrders: Order[] = [];
+        for(let i=0; i<this.bids.length; i++){
+            if(this.bids[i].userId===userId){
+                openOrders.push(this.bids[i]);
+            }
+        }
+        for(let i=0; i<this.asks.length; i++){
+            if(this.asks[i].userId===userId){
+                openOrders.push(this.asks[i]);
+            }
+        }
+        return openOrders
+    }
+
+    getDepth() : {market: string, bids: [string, string][],asks: [string, string][] } {
+        const bids: [string, string][] = [];
+        const asks: [string, string][] = [];
+        const bidsObj: {[key: string]: number} = {};
+        const asksObj: {[key: string]: number} = {};
+        for(let i=0; i<this.bids.length; i++){
+            const price = this.bids[i].price;
+            if(!bidsObj[price]) bidsObj[price] = 0;
+            bidsObj[price] += this.bids[i].quantity;
+        }
+        for(let i=0; i<this.asks.length; i++){
+            const price = this.asks[i].price;
+            if(!asksObj[price]) asksObj[price] = 0;
+            asksObj[price] += this.asks[i].quantity;
+        }
+        for(const price in bidsObj){
+            bids.push([price,bidsObj[price].toString()]);
+        }
+        for(const price in asksObj){
+            asks.push([price, asksObj[price].toString()]);
+        }
+        const market = this.ticker();
+        return {
+            market,
+            bids,
+            asks
+        }
     }
 }
