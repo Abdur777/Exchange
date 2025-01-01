@@ -1,5 +1,5 @@
 import { RedisManager } from "../RedisManager";
-import { CREATE_ORDER, MessageFromApi } from "../types/fromApi";
+import { CANCEL_ORDER, CREATE_ORDER, GET_DEPTH, GET_OPEN_ORDERS, MessageFromApi } from "../types/fromApi";
 import { Fill, Order, OrderBook } from "./OrderBook";
 
 export const BASE_CURRENCY = "USD";
@@ -43,15 +43,109 @@ export class Engine {
     process({ message , clientId }:{message: MessageFromApi, clientId: string}){
         switch(message.type){
             case CREATE_ORDER:
-                    const { orderId, executedQty, fills } = this.createOrder(message.data.market, message.data.price, message.data.quantity, message.data.userId, message.data.side);
-                    RedisManager.getInstance().sendToApi({
-                        type: "ORDER_PLACED",
-                        payload:{
-                            orderId,
-                            executedQty,
-                            fills
+                    try {
+                        const { orderId, executedQty, fills } = this.createOrder(message.data.market, message.data.price, message.data.quantity, message.data.userId, message.data.side);
+                            RedisManager.getInstance().sendToApi({
+                            type: "ORDER_PLACED",
+                            payload:{
+                                orderId,
+                                executedQty,
+                                fills
+                            }
+                        }, clientId);
+                    }
+                    catch (e) {
+                            RedisManager.getInstance().sendToApi({
+                            type: "ORDER_CANCELLED",
+                            payload:{
+                                orderId: "",
+                                executedQty: 0,
+                                remainingQty: 0
+                            }
+                        }, clientId);
+                    }
+                    break;
+            case CANCEL_ORDER:
+                    try {
+                        const orderId = message.data.orderId;
+                        const cancelMarket =  message.data.market;
+                        const cancelOrderbook = this.orderBook.find((e)=> e.ticker()===cancelMarket);
+                        const quoteAsset = cancelMarket.split("_")[1];
+                        const baseAsset = cancelMarket.split("_")[0];
+                        console.log(quoteAsset," ", baseAsset);
+                        if(!cancelOrderbook){
+                            throw new Error("OrderBook not present");
                         }
-                    },clientId);
+                        const order = cancelOrderbook.asks.find(o => o.orderId === orderId) || cancelOrderbook.bids.find(o => o.orderId === orderId);
+                        if (!order) {
+                            console.log("No order found");
+                            throw new Error("No order found");
+                        }
+                        if(order.side==="buy"){
+                            const price = cancelOrderbook.cancelBid(order);
+                            //@ts-ignore
+                            this.balances.get(order.userId)[quoteAsset].available += price*(order.quantity-order.filled);
+                            //@ts-ignore
+                            this.balances.get(order.userId)[quoteAsset].locked -= price*(order.quantity-order.filled);
+                        }
+                        else{
+                            cancelOrderbook.cancelAsk(order);
+                            //@ts-ignore
+                            this.balances.get(order.userId)[baseAsset].available += (order.quantity-order.filled);
+                            //@ts-ignore
+                            this.balances.get(order.userId)[baseAsset].locked -= (order.quantity-order.filled);
+                        }
+                        RedisManager.getInstance().sendToApi({
+                            type: "ORDER_CANCELLED",
+                            payload: {
+                                orderId,
+                                executedQty: 0,
+                                remainingQty: 0
+                            }
+                        }, clientId)
+                    }
+                    catch (e){
+                        console.log("Error cancelling order");
+                        console.log(e);
+                    }
+                    break;
+            case GET_OPEN_ORDERS:
+                try {
+                    const orderbook = this.orderBook.find(o=>o.ticker()===message.data.market);
+                    if(!orderbook){
+                        throw new Error("OrderBook not present");
+                    }
+                    const openOrders = orderbook.getOpenOrders(message.data.userId);
+                    RedisManager.getInstance().sendToApi({
+                        type: "OPEN_ORDERS",
+                        payload: openOrders
+                    }, clientId)
+                } catch(e) {
+                    console.log(e);
+                }
+                break;        
+            case GET_DEPTH:
+                try {
+                    const orderbook = this.orderBook.find(o=>o.ticker()===message.data.market);
+                    if(!orderbook){
+                        throw new Error("OrderBook not present");
+                    }
+                    RedisManager.getInstance().sendToApi({
+                        type: "DEPTH",
+                        payload: orderbook.getDepth()
+                    }, clientId)
+                } catch (e) {
+                    console.log(e);
+                    RedisManager.getInstance().sendToApi({
+                        type: "DEPTH",
+                        payload: {
+                            market: message.data.market,
+                            bids: [],
+                            asks: []
+                        }
+                    }, clientId);
+                }
+                break;            
                 }
             }
             createOrder(market: string, price: string, quantity: string, userId: string, side: "buy" | "sell") {
