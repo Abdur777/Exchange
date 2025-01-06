@@ -1,8 +1,10 @@
+import { SubscriptionManager } from "./SubscriptionManager";
 import { User } from "./User";
 import { WebSocket } from "ws";
 
 export class UserManger {
     private static instance: UserManger
+    private users: Map<string, User> = new Map();
 
     public static getInstance(){
         if(!this.instance){
@@ -11,9 +13,22 @@ export class UserManger {
         return this.instance
     }
 
-    addUser(ws: WebSocket){
+    public addUser(ws: WebSocket){
         const id = this.getRandomId();
         const user = new User(id, ws);
+        this.users.set(id,user)
+        this.registerOnClose(ws, id);
+    }
+
+    public getUser(id: string){
+        return this.users.get(id);
+    }
+
+    private registerOnClose(ws: WebSocket, id: string) {
+        ws.on("close", () => {
+            this.users.delete(id);
+            SubscriptionManager.getInstance().userLeft(id);
+        });
     }
 
     private getRandomId() {
