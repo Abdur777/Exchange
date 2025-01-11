@@ -11,7 +11,11 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        baseBackgroundL1: "rgb(20,21,27)",
       },
+      fontFamily: {
+        inter: ['InterVariable', 'ui-sans-serif', 'system-ui', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'],
+      }
     },
   },
   plugins: [],
