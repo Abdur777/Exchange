@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Ticker } from "../utils/types";
 import { SignalingManager } from "../utils/SignalingManager";
+import { getTicker } from "../utils/httpClient";
 
 export default function MarketBar({ market }: { market: string }) {
   const [ticker, setTicker] = useState<Ticker | null>(null);
   useEffect(() => {
+    getTicker(market).then(setTicker);
     SignalingManager.getInstance().registerCallBack(
       "ticker",
       (data: Partial<Ticker>) =>
@@ -47,11 +49,17 @@ export default function MarketBar({ market }: { market: string }) {
           <TickerComp market={market} />
           <div className="flex items-center flex-row space-x-6">
             <div className="flex flex-col h-full justify-center">
-              <p className="font-medium font-inter tabular-nums text-lg">
-                {/* ${ticker?.lastPrice} */}94,241.7
+              <p className={`font-medium font-inter tabular-nums text-lg ${
+                  Number(ticker?.priceChange) > 0
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}>
+                ${ticker?.lastPrice.toLocaleString()} 
+                {/* 94,241.7 */}
               </p>
               <p className="font-medium font-inter text-left text-sm tabular-nums">
-                {/* ${ticker?.lastPrice} */} $94,241.7
+                ${ticker?.lastPrice.toLocaleString()} 
+                {/* $94,241.7 */}
               </p>
             </div>
             <div className="flex justify-center flex-col relative">
@@ -60,14 +68,14 @@ export default function MarketBar({ market }: { market: string }) {
               </p>
               <span
                 className={` text-sm font-medium font-inter tabular-nums leading-5 text-sm text-greenText ${
-                  Number(-1) > 0
+                  Number(ticker?.priceChange) > 0
                     ? "text-green-500"
                     : "text-red-500"
                 }`}
               >
-                {Number(-1) > 0 ? "+" : ""}{" "}
-                {-465.3}{" "}
-                {Number(-0.49)?.toFixed(2)}%
+                {Number(ticker?.priceChange) > 0 ? "+" : ""}
+                {ticker?.priceChange}{" "}
+                {Number(ticker?.priceChangePercent)?.toFixed(2)}%
               </span>
             </div>
             <div className="flex flex-col">
@@ -75,7 +83,8 @@ export default function MarketBar({ market }: { market: string }) {
                 24H High
               </p>
               <span className="text-sm font-medium font-inter tabular-nums leading-5 text-sm ">
-                {/* {ticker?.high} */}95,397.7
+                {ticker?.high}
+                {/* 95,397.7 */}
               </span>
             </div>
             <div className="flex flex-col">
@@ -83,7 +92,8 @@ export default function MarketBar({ market }: { market: string }) {
                 24H Low
               </p>
               <span className="text-sm font-medium font-inter tabular-nums leading-5 text-sm ">
-                {/* {ticker?.low} */} 93,850.0
+                {ticker?.low} 
+                {/* 93,850.0 */}
               </span>
             </div>
             
@@ -97,7 +107,8 @@ export default function MarketBar({ market }: { market: string }) {
                   24H Volume
                 </p>
                 <span className="text-sm font-medium font-inter tabular-nums leading-5 text-sm ">
-                  {/* {ticker?.volume} */}385,449.32
+                  {ticker?.volume}
+                  {/* 385,449.32 */}
                 </span>
               </div>
             </button>
