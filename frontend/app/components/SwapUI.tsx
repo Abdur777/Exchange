@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BigBuyButton, BigSellButton, BuyButton, LimitButton, MarketButton, SellButton } from "./core/Button";
 
 export const SwapUI = ({ market }: { market: string }) => {
   const [amount, setAmount] = useState('');
@@ -43,6 +44,15 @@ export const SwapUI = ({ market }: { market: string }) => {
                     <input placeholder="0" className="h-12 pl-3 rounded-lg border-2 border-solid border-baseBackgroundL2 bg-baseBackgroundL2 pr-12 text-left text-2xl leading-9 text-[$text] placeholder-baseTextMedEmphasis ring-0 transition focus:border-accentBlue focus:ring-0" type="text" value={amount} onChange={(e)=> setAmount(e.target.value)} inputMode="numeric"/>
                   </div>
                 </div>
+                <div className="flex flex-col gap-2 mb-5">
+                  <div className="flex items-center justify-between flex-row">
+                    <p className="text-xs font-normal text-baseTextMedEmphasis">Quantity</p>
+                  </div>
+                  <div className="flex flex-col relative">
+                    <input placeholder="0" className="h-12 pl-3 rounded-lg border-2 border-solid border-baseBackgroundL2 bg-baseBackgroundL2 pr-12 text-left text-2xl leading-9 text-[$text] placeholder-baseTextMedEmphasis ring-0 transition focus:border-accentBlue focus:ring-0" type="text" value={amount} onChange={(e)=> setAmount(e.target.value)} inputMode="numeric"/>
+                  </div>
+                </div>
+                {activeTab==='buy' ? <BigBuyButton /> : <BigSellButton/>}
               </div>
             </div>
           </div>
@@ -51,83 +61,3 @@ export const SwapUI = ({ market }: { market: string }) => {
     </div>
   );
 };
-
-function BuyButton({
-  activeTab,
-  setActiveTab,
-}: {
-  activeTab: string;
-  setActiveTab: any;
-}) {
-  return (
-    <button
-      className={`w-full overflow-hidden rounded-xl text-sm font-semibold hover:text-green-500 ${
-        activeTab === "buy"
-          ? "border-b-greenBorder bg-greenBackgroundTransparent text-green-500"
-          : "border-b-baseBorderMed hover:border-b-baseBorderFocus"
-      }`}
-      onClick={() => setActiveTab("buy")}
-    >
-      {/* <p className="text-center text-sm font-semibold text-greenText">Buy</p> */}Buy
-    </button>
-  );
-}
-
-function SellButton({
-  activeTab,
-  setActiveTab,
-}: {
-  activeTab: string;
-  setActiveTab: any;
-}) {
-  return (
-    <button
-      className={`w-full overflow-hidden rounded-xl text-sm font-semibold hover:text-red-500 ${
-        activeTab === "sell"
-          ? "border-b-redBorder bg-redBackgroundTransparent text-red-500"
-          : "border-b-baseBorderMed hover:border-b-baseBorderFocus"
-      }`}
-      onClick={() => setActiveTab("sell")}
-    >
-      {/* <p className="text-center text-sm font-semibold text-redText">Sell</p> */} Sell
-    </button>
-  );
-}
-
-function LimitButton({ type, setType }: { type: string; setType: any }) {
-  return (
-    <div
-      className="flex flex-col cursor-pointer justify-center py-2"
-      onClick={() => setType("limit")}
-    >
-      <div
-        className={`text-sm font-medium py-1 border-b-2 ${
-          type === "limit"
-            ? "border-accentBlue text-baseTextHighEmphasis"
-            : "border-transparent text-baseTextMedEmphasis hover:border-baseTextHighEmphasis hover:text-baseTextHighEmphasis"
-        }`}
-      >
-        Limit
-      </div>
-    </div>
-  );
-}
-
-function MarketButton({ type, setType }: { type: string; setType: any }) {
-  return (
-    <div
-      className="flex flex-col cursor-pointer justify-center py-2"
-      onClick={() => setType("market")}
-    >
-      <div
-        className={`text-sm font-medium py-1 border-b-2 ${
-          type === "market"
-            ? "border-accentBlue text-baseTextHighEmphasis"
-            : "border-b-2 border-transparent text-baseTextMedEmphasis hover:border-baseTextHighEmphasis hover:text-baseTextHighEmphasis"
-        } `}
-      >
-        Market
-      </div>
-    </div>
-  );
-}
