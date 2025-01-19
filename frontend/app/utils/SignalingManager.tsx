@@ -1,6 +1,6 @@
 import { Ticker } from "./types"
 
-export const BASE_URL = "ws://localhost:3001"
+export const BASE_URL = "wss://ws.backpack.exchange/"
 
 export class SignalingManager {
     private static instance: SignalingManager
@@ -34,19 +34,30 @@ export class SignalingManager {
         }
         this.ws.onmessage = (event) => {
             const parsedMessage = JSON.parse(event.data)
+            // console.log(parsedMessage)
             const type = parsedMessage.data.e;
             if(this.CallBack[type]){
                 //@ts-ignore
-                this.CallBack[type].forEach(({ callBack })=>{
-                    const newTicker: Partial<Ticker> = {
-                        lastPrice: parsedMessage.data.c,
-                        high: parsedMessage.data.h,
-                        low: parsedMessage.data.l,
-                        volume: parsedMessage.data.v,
-                        quoteVolume: parsedMessage.data.V,
-                        symbol: parsedMessage.data.s,
-                    }
-                    callBack(newTicker)
+                this.CallBack[type].forEach(({ callback })=>{
+                    if (type === "ticker") {
+                        const newTicker: Partial<Ticker> = {
+                            lastPrice: parsedMessage.data.c,
+                            high: parsedMessage.data.h,
+                            low: parsedMessage.data.l,
+                            volume: parsedMessage.data.v,
+                            quoteVolume: parsedMessage.data.V,
+                            symbol: parsedMessage.data.s,
+                        }
+                        // console.log(newTicker);
+                        // console.log("callBack", callback)
+                        callback(newTicker);
+                   }
+                   if (type === "depth") {
+                        // console.log(parsedMessage)
+                        const updatedBids = parsedMessage.data.b;
+                        const updatedAsks = parsedMessage.data.a;
+                        callback({ bids: updatedBids, asks: updatedAsks });
+                    }    
                 })
             }
             
