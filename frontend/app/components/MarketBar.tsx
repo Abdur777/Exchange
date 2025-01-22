@@ -50,21 +50,21 @@ export default function MarketBar({ market }: { market: string }) {
           <TickerComp market={market} />
           <div className="flex items-center flex-row space-x-6">
             <div className="flex flex-col h-full justify-center">
-              <p className={`font-medium font-inter tabular-nums text-lg ${
+              <p className={`font-semibold font-inter tabular-nums text-lg ${
                   Number(ticker?.priceChange) > 0
                     ? "text-green-500"
                     : "text-red-500"
                 }`}>
-                ${ticker?.lastPrice.toLocaleString()} 
+                {ticker?.lastPrice.toLocaleString()} 
                 {/* 94,241.7 */}
               </p>
-              <p className="font-medium font-inter text-left text-sm tabular-nums">
+              <p className="font-semibold font-inter text-left text-sm tabular-nums">
                 ${ticker?.lastPrice.toLocaleString()} 
                 {/* $94,241.7 */}
               </p>
             </div>
             <div className="flex justify-center flex-col relative">
-              <p className="font-medium font-inter text-xs text-slate-400 text-sm">
+              <p className="font-semibold font-inter text-xs text-slate-400 text-sm">
                 24H Change
               </p>
               <span
@@ -83,13 +83,13 @@ export default function MarketBar({ market }: { market: string }) {
               <p className="font-medium font-inter text-xs text-slate-400 text-sm">
                 24H High
               </p>
-              <span className="text-sm font-medium font-inter tabular-nums leading-5 text-sm ">
+              <span className="text-sm font-semibold font-inter tabular-nums leading-5 text-sm ">
                 {ticker?.high}
                 {/* 95,397.7 */}
               </span>
             </div>
             <div className="flex flex-col">
-              <p className="font-medium font-inter text-xs text-slate-400 text-sm">
+              <p className="font-semibold font-inter text-xs text-slate-400 text-sm">
                 24H Low
               </p>
               <span className="text-sm font-medium font-inter tabular-nums leading-5 text-sm ">
@@ -101,10 +101,9 @@ export default function MarketBar({ market }: { market: string }) {
             <button
               type="button"
               className="font-medium font-inter transition-opacity hover:opacity-80 hover:cursor-pointer text-base text-left"
-              data-rac=""
             >
               <div className="flex flex-col">
-                <p className="font-medium font-inter text-xs text-slate-400 text-sm">
+                <p className="font-semibold font-inter text-xs text-slate-400 text-sm">
                   24H Volume
                 </p>
                 <span className="text-sm font-medium font-inter tabular-nums leading-5 text-sm ">
@@ -141,11 +140,11 @@ function TickerComp({ market }: { market: string }) {
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVvBqZC_Q1TSYObZaMvK0DRFeHZDUtVMh08Q&s"
         />
       </div>
-      <button type="button" className="react-aria-Button" data-rac="">
+      <button type="button" className="react-aria-Button">
         <div className="flex items-center justify-between flex-row cursor-pointer rounded-lg p-3 hover:opacity-80">
           <div className="flex items-center flex-row gap-2 undefined">
             <div className="flex flex-row relative">
-              <p className="font-medium font-inter text-sm undefined">
+              <p className="font-boldBuy font-inter text-sm undefined">
                 {market.replace("_", " / ")}
               </p>
             </div>

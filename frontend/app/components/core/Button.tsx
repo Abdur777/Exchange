@@ -38,14 +38,14 @@ export function BuyButton({
 
 export function BigBuyButton () {
   return <button
-  className="w-full overflow-hidden rounded-xl text-sm font-semibold hover:text-green-500 border-b-greenBorder bg-greenBackgroundTransparent text-green-500 h-12">
+  className="w-full overflow-hidden rounded-xl text-sm font-black hover:text-green-500 border-b-greenBorder bg-greenBackgroundTransparent text-green-500 h-12">
   Buy
 </button>
 }
 
 export function BigSellButton () {
   return <button
-  className="w-full overflow-hidden rounded-xl text-sm font-semibold border-b-redBorder bg-redBackgroundTransparent text-red-500 h-12">
+  className="w-full overflow-hidden rounded-xl text-sm font-black border-b-redBorder bg-redBackgroundTransparent text-red-500 h-12">
   Sell
 </button>
 }
@@ -78,7 +78,7 @@ export function LimitButton({ type, setType }: { type: string; setType: any }) {
       onClick={() => setType("limit")}
     >
       <div
-        className={`text-sm font-medium py-1 border-b-2 ${
+        className={`text-sm font-semibold py-1 border-b-2 ${
           type === "limit"
             ? "border-accentBlue text-baseTextHighEmphasis"
             : "border-transparent text-baseTextMedEmphasis hover:border-baseTextHighEmphasis hover:text-baseTextHighEmphasis"
@@ -97,7 +97,7 @@ export function MarketButton({ type, setType }: { type: string; setType: any }) 
       onClick={() => setType("market")}
     >
       <div
-        className={`text-sm font-medium py-1 border-b-2 ${
+        className={`font-semibold text-sm font-medium py-1 border-b-2 ${
           type === "market"
             ? "border-accentBlue text-baseTextHighEmphasis"
             : "border-b-2 border-transparent text-baseTextMedEmphasis hover:border-baseTextHighEmphasis hover:text-baseTextHighEmphasis"

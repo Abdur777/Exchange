@@ -64,13 +64,13 @@ function Bid({
         }}
       />
       <div className="flex justify-between text-xs w-full">
-        <p className="z-10 w-[30%] text-left text-xs font-normal tabular-nums text-[#00C278E6]">
+        <p className="z-10 w-[30%] text-left text-xs font-medium tabular-nums text-[#00C278E6] font-inter">
           {new Intl.NumberFormat().format(Number(price))}
         </p>
-        <p className="z-10 w-[35%] text-right text-xs font-normal tabular-nums text-baseTextHighEmphasis/80">
+        <p className="z-10 w-[35%] text-right text-xs font-medium tabular-nums font-inter">
           {quantity}
         </p>
-        <p className="z-10 w-[35%] pr-2 text-right text-xs font-normal tabular-nums text-baseTextHighEmphasis/80">
+        <p className="z-10 w-[35%] pr-2 text-right text-xs font-medium tabular-nums font-inter">
           {total.toFixed(2)}
         </p>
       </div>

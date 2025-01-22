@@ -27,18 +27,18 @@ export const SwapUI = ({ market }: { market: string }) => {
               <div className="flex flex-col flex-1 gap-3 text-baseTextHighEmphasis">
                 <div className="flex justify-between flex-row">
                   <button type="button" className="cursor-help">
-                    <p className="relative text-xs font-normal text-baseTextMedEmphasis">
+                    <p className="relative text-xs font-medium text-[#969FAF]">
                       Balance
                       <span className="absolute bottom-0 left-0 w-full translate-y-full border-b border-dashed border-baseBorderMed"></span>
                     </p>
                   </button>
-                  <p className="text-xs font-medium text-baseTextHighEmphasis">
+                  <p className="text-xs font-medium text-[#969FAF]">
                     0.00 USDC
                   </p>
                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between flex-row">
-                    <p className="text-xs font-normal text-baseTextMedEmphasis">Price</p>
+                    <p className="text-xs font-medium text-[#969FAF]">Price</p>
                   </div>
                   <div className="flex flex-col relative">
                     <input placeholder="0" className="h-12 pl-3 rounded-lg border-2 border-solid border-baseBackgroundL2 bg-baseBackgroundL2 pr-12 text-left text-2xl leading-9 text-[$text] placeholder-baseTextMedEmphasis ring-0 transition focus:border-accentBlue focus:ring-0" type="text" value={amount} onChange={(e)=> setAmount(e.target.value)} inputMode="numeric"/>

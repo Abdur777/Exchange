@@ -65,13 +65,13 @@ function Ask({ price, quantity, total, maxTotal }: {
                 }}
             />
             <div className="flex justify-between text-xs w-full">
-                <p className="z-10 w-[30%] text-left text-xs font-normal tabular-nums text-[#FD4B4EE6]">
+                <p className="z-10 w-[30%] text-left text-xs font-medium tabular-nums text-[#FD4B4EE6]">
                     {new Intl.NumberFormat().format(Number(price))}
                 </p>
-                <p className="z-10 w-[35%] text-right text-xs font-normal tabular-nums text-baseTextHighEmphasis/80">
+                <p className="z-10 w-[35%] text-right text-xs font-medium tabular-nums font-inter">
                     {quantity}
                 </p>
-                <p className="z-10 w-[35%] pr-2 text-right text-xs font-normal tabular-nums text-baseTextHighEmphasis/80">
+                <p className="z-10 w-[35%] pr-2 text-right text-xs font-medium tabular-nums font-inter0">
                     {total.toFixed(2)}
                 </p>
             </div>
