@@ -2,10 +2,12 @@ import { SignalingManager } from "@/app/utils/SignalingManager"
 import { useEffect, useState } from "react"
 import { BidTable } from "./BidTable"
 import AskTable from "./AskTable"
+import { usePriceContext } from "@/app/contexts/PriceContext"
 
 export function Depth({ market }: {market: string}) {
     const [bids, setBids]  = useState<[string,string][]>()
     const [asks, setAsks]  = useState<[string,string][]>()
+    const { ticker } = usePriceContext();
     useEffect(() => {
         SignalingManager.getInstance().registerCallBack("depth", (data: any) => {
             // console.log("depth has been updated",data);
@@ -79,8 +81,12 @@ export function Depth({ market }: {market: string}) {
                     <div className="flex flex-col flex-1">
                         {asks && <AskTable asks={asks}/>}
                     </div>
-                    <div className="flex flex-col flex-0 z-20 snap-center bg-baseBackgroundL1 px-3 py-1 sticky bottom-0">
-                        Ticker
+                    <div className={`flex flex-col flex-0 z-20 snap-center bg-baseBackgroundL1 px-3 py-1 sticky bottom-0 ${
+                    Number(ticker?.priceChange) > 0
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}>
+                        {ticker?.lastPrice}
                     </div>
                     <div className="flex flex-col flex-1">
                         {bids && <BidTable bids={bids} />}
