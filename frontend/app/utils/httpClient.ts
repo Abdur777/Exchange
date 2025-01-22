@@ -22,3 +22,8 @@ export async function getTickers(): Promise<Ticker[]> {
     const response = await axios.get(`${BASE_URL}/tickers`);
     return response.data;
 }
+
+export async function getDepth() {
+    const response = await axios.get("http://localhost:5001/depth");
+    return response.data;
+}
