@@ -2,22 +2,23 @@ import { useEffect, useState } from "react";
 import { Ticker } from "../utils/types";
 import { SignalingManager } from "../utils/SignalingManager";
 import { getTicker } from "../utils/httpClient";
+import { usePriceContext } from "../contexts/PriceContext";
 
 export default function MarketBar({ market }: { market: string }) {
-  const [ticker, setTicker] = useState<Ticker | null>(null);
+  const { ticker, setTicker } = usePriceContext();
   useEffect(() => {
     getTicker(market).then(setTicker);
     SignalingManager.getInstance().registerCallBack(
       "ticker",
       (data: Partial<Ticker>) =>
+        //@ts-ignore
         setTicker((prevTicker) => ({
           firstPrice: data?.firstPrice ?? prevTicker?.firstPrice ?? "",
           high: data?.high ?? prevTicker?.high ?? "",
           lastPrice: data?.lastPrice ?? prevTicker?.lastPrice ?? "",
           low: data?.low ?? prevTicker?.low ?? "",
           priceChange: data?.priceChange ?? prevTicker?.priceChange ?? "",
-          priceChangePercent:
-            data?.priceChangePercent ?? prevTicker?.priceChangePercent ?? "",
+          priceChangePercent: data?.priceChangePercent ?? prevTicker?.priceChangePercent ?? "",
           quoteVolume: data?.quoteVolume ?? prevTicker?.quoteVolume ?? "",
           symbol: data?.symbol ?? prevTicker?.symbol ?? "",
           trades: data?.trades ?? prevTicker?.trades ?? "",
@@ -40,7 +41,7 @@ export default function MarketBar({ market }: { market: string }) {
         params: [`ticker.${market}`],
       });
     };
-  }, [market]);
+  }, [market,setTicker]);
 
   return (
     <div className="flex items-center flex-row relative w-full rounded-lg bg-baseBackgroundL1">
