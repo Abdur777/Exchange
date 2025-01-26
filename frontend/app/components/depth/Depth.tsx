@@ -15,6 +15,8 @@ export function Depth({ market }: {market: string}) {
             setBids(( prev ) => {
                 const bidsAfterUpdate = [...(prev || [])];
 
+                console.log("bidsAfterUpdate",bidsAfterUpdate)
+
                 for (let i = 0; i < bidsAfterUpdate.length; i++) {
                     for (let j = 0; j < data.bids.length; j++)  {
                         if (bidsAfterUpdate[i][0] === data.bids[j][0]) {
@@ -63,7 +65,7 @@ export function Depth({ market }: {market: string}) {
                 return asksAfterUpdate; 
             });
         },`DEPTH-${market}`)
-        getDepth().then((res)=>{
+        getDepth(market).then((res)=>{
             setBids(res.asks);
             setAsks(res.bids)
         })
@@ -72,7 +74,7 @@ export function Depth({ market }: {market: string}) {
             SignalingManager.getInstance().sendMessage({"method":"UNSUBSCRIBE","params":[`depth.${market}`]});
             SignalingManager.getInstance().deRegisterCallback("depth", `DEPTH-${market}`);
         }
-    }, [])
+    }, [market])
 
     return <div className="flex flex-col h-full">
         <div className="flex flex-col grow overflow-y-hidden">
