@@ -23,7 +23,7 @@ export async function getTickers(): Promise<Ticker[]> {
     return response.data;
 }
 
-export async function getDepth() {
-    const response = await axios.get("http://localhost:5001/depth");
+export async function getDepth(market: string) {
+    const response = await axios.get(`http://localhost:5001/depth?symbol=${market}`);
     return response.data;
 }
