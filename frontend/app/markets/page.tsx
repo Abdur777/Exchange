@@ -30,8 +30,8 @@ const Markets = () => {
       <table className="min-w-full ">
         <MarketHeader/>
         <tbody className="gap-2 divide-y divide-gray-800">
-            {tickers && tickers.map(ticker=>{
-              return <MarketRow />
+            {tickers && tickers.map((ticker,index)=>{
+              return <MarketRow key={index} market={ticker} />
             })}
         </tbody>
       </table>  
