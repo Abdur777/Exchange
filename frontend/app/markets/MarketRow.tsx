@@ -1,6 +1,18 @@
-export default function MarketRow() {
-  return (
-    <tr className="hover:bg-baseBackgroundL2 cursor-pointer">
+import { useRouter } from 'next/navigation'
+import { Ticker } from "../utils/types"
+
+export default function MarketRow({ market }: { market: Ticker }) {
+    const router = useRouter()
+    
+    const handleMarketClick = () => {
+        router.push(`/trade/${market.symbol}`)
+    }
+
+    return (
+        <tr 
+            className="hover:bg-baseBackgroundL2 cursor-pointer" 
+            onClick={handleMarketClick}
+        >
       <td className="text-sm tabular-nums px-2 py-3 last:pr-7">
         <div className="flex shrink">
           <div className="flex items-center undefined">
@@ -18,11 +30,11 @@ export default function MarketRow() {
             </div>
             <div className="ml-2 flex flex-col">
               <p className="whitespace-nowrap text-base font-medium text-baseTextHighEmphasis">
-                Solana
+                {market.symbol.split("_")[0]}
               </p>
               <div className="flex items-center justify-start flex-row gap-2">
                 <div className="font-medium text-left text-xs leading-5 text-baseTextMedEmphasis">
-                  SOL
+                    {market.symbol.split("_")[0]}
                 </div>
               </div>
             </div>
@@ -30,7 +42,7 @@ export default function MarketRow() {
         </div>
       </td>
       <td className="text-sm tabular-nums px-2 py-3 last:pr-7 text-right">
-        <p className="text-base font-medium tabular-nums">$257.94</p>
+        <p className="text-base font-medium tabular-nums">{market.lastPrice}</p>
       </td>
       <td className="text-sm tabular-nums px-2 py-3 last:pr-7 text-right">
         <p className="text-base font-medium tabular-nums">$123.9B</p>
@@ -40,12 +52,12 @@ export default function MarketRow() {
       </td>
       <td className="text-sm tabular-nums px-2 py-3 last:pr-7 text-right">
         <p className="text-base font-medium tabular-nums text-redText">
-          -2.40 %
+          {(Number(market.priceChangePercent)*100).toFixed(2)}%
         </p>
       </td>
       <td className="text-sm tabular-nums px-2 py-3 last:pr-7 text-right">
         <div className="align-center flex justify-end">
-          <div className="recharts-wrapper">
+          {/* <div className="recharts-wrapper">
             <svg
               className="recharts-surface"
               width="100"
@@ -72,9 +84,9 @@ export default function MarketRow() {
                 <g className="recharts-layer"></g>
               </g>
             </svg>
-          </div>
+          </div> */}
         </div>
       </td>
     </tr>
-  );
+    )
 }
