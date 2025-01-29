@@ -1,10 +1,10 @@
 import axios from "axios";
 import { KLine, Ticker } from "./types";
 
-const BASE_URL = "http://localhost:5001";
+const BASE_URL = "https://proxy-exchange.vercel.app";
 
-export async function getKlines(){
-    const res = await axios.get(`${BASE_URL}/kline`);
+export async function getKlines(market: string){
+    const res = await axios.get(`${BASE_URL}/kline?symbol=${market}`);
     const data: KLine[] = res.data;
     return data.sort((x, y) => (Number(x.end) < Number(y.end) ? -1 : 1));
 }
@@ -24,6 +24,6 @@ export async function getTickers(): Promise<Ticker[]> {
 }
 
 export async function getDepth(market: string) {
-    const response = await axios.get(`http://localhost:5001/depth?symbol=${market}`);
+    const response = await axios.get(`${BASE_URL}/depth?symbol=${market}`);
     return response.data;
 }
