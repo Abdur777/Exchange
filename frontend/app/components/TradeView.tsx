@@ -11,7 +11,7 @@ export default function TradeView({ market }: { market: string }) {
     async function init(){
         let KlineData: KLine[] = [];
         try{
-            KlineData  = await getKlines();
+            KlineData  = await getKlines(market);
         }
         catch(e) {}
         if(chartRef){
