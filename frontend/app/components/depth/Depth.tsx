@@ -93,7 +93,7 @@ export function Depth({ market }: {market: string}) {
                         ? "text-green-500"
                         : "text-red-500"
                     }`}>
-                       <p className="font-semibold tabular-nums">{ticker?.lastPrice}</p>
+                       <p className="font-semibold tabular-nums">{new Intl.NumberFormat().format(Number(ticker?.lastPrice))}</p>
                     </div>
                     <div className="flex flex-col flex-1">
                         {bids && <BidTable bids={bids} />}
