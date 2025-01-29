@@ -55,11 +55,11 @@ export default function MarketBar({ market }: { market: string }) {
                     ? "text-green-500"
                     : "text-red-500"
                 }`}>
-                {ticker?.lastPrice.toLocaleString()} 
+                {new Intl.NumberFormat().format(Number(ticker?.lastPrice))} 
                 {/* 94,241.7 */}
               </p>
               <p className="font-semibold font-inter text-left text-sm tabular-nums">
-                ${ticker?.lastPrice.toLocaleString()} 
+                ${new Intl.NumberFormat().format(Number(ticker?.lastPrice))} 
                 {/* $94,241.7 */}
               </p>
             </div>
