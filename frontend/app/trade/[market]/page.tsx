@@ -18,7 +18,7 @@ export default function Page() {
           <div className="flex flex-col flex-1 overflow-hidden rounded-lg bg-baseBackgroundL1">
             <div className="flex items-center justify-between flex-row px-4 py-4">
               <p className="font-medium text-sm font-inter text-slate-400">
-                Chart
+                Chart 15min
               </p>
               <div className="items-center justify-start flex-row flex space-x-2">
                 <div className="flex justify-center flex-col cursor-pointer rounded-lg py-1 font-medium text-md font-inter text-slate-400 outline-none hover:opacity-90 h-[32px] px-3">
