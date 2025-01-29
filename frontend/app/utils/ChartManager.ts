@@ -26,25 +26,25 @@ export class ChartManager {
       crosshair: {
         mode: CrosshairMode.Normal,
         vertLine: {
-          color: "#6A5ACD",
+          color: "#FFFFFF",
           width: 1,
-          style: 0,
+          style: 3,
           visible: true,
           labelVisible: true,
         },
         horzLine: {
-          color: "#6A5ACD",
+          color: "#FFFFFF",
           width: 1,
-          style: 0,
+          style: 3,
           visible: true,
           labelVisible: true,
         },
       },
       rightPriceScale: {
-        borderColor: "#485c7b",
+        borderColor: "#transparent",
       },
       timeScale: {
-        borderColor: "#485c7b",
+        borderColor: "transparent",
       },
     });
 
@@ -52,12 +52,12 @@ export class ChartManager {
 
     // Add candlestick series
     this.candleSeries = chart.addCandlestickSeries({
-      upColor: "#26a69a",
+      upColor: "#00AB66",
       downColor: "#ef5350",
       borderDownColor: "#ef5350",
-      borderUpColor: "#26a69a",
+      borderUpColor: "#00AB66",
       wickDownColor: "#ef5350",
-      wickUpColor: "#26a69a",
+      wickUpColor: "#00AB66",
     });
 
     // Set initial data
