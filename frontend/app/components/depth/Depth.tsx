@@ -4,12 +4,16 @@ import { BidTable } from "./BidTable"
 import AskTable from "./AskTable"
 import { usePriceContext } from "@/app/contexts/PriceContext"
 import { getDepth } from "@/app/utils/httpClient"
+import Loading from "../Loading"
+// import Loading from '@/components/ui/Loading';
 
 export function Depth({ market }: {market: string}) {
     const [bids, setBids]  = useState<[string,string][]>()
     const [asks, setAsks]  = useState<[string,string][]>()
+    const [loading, setLoading] = useState<boolean>(false);
     const { ticker } = usePriceContext();
     useEffect(() => {
+        setLoading(true);
         SignalingManager.getInstance().registerCallBack("depth", (data: any) => {
             // console.log("depth has been updated",data);
             setBids(( prev ) => {
@@ -67,7 +71,8 @@ export function Depth({ market }: {market: string}) {
         },`DEPTH-${market}`)
         getDepth(market).then((res)=>{
             setBids(res.asks);
-            setAsks(res.bids)
+            setAsks(res.bids);
+            setLoading(false);
         })
         SignalingManager.getInstance().sendMessage({"method":"SUBSCRIBE","params":[`depth.${market}`]});
         return () => {
@@ -75,6 +80,12 @@ export function Depth({ market }: {market: string}) {
             SignalingManager.getInstance().deRegisterCallback("depth", `DEPTH-${market}`);
         }
     }, [market])
+
+    if(loading) return (
+      <div className="flex-1 flex items-center justify-center">
+        <Loading />
+      </div>
+    );
 
     return <div className="flex flex-col h-full">
         <div className="flex flex-col grow overflow-y-hidden">
