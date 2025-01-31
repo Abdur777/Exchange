@@ -4,18 +4,22 @@ import { useEffect, useState } from "react";
 import { MarketHeader } from "./MarketHeader";
 import MarketRow from "./MarketRow";
 import { Ticker } from "../utils/types";
-import { getTicker, getTickers } from "../utils/httpClient";
+import { getTickers } from "../utils/httpClient";
+import Loading from "../components/Loading";
 
 const Markets = () => {
 
   const [tickers, setTickers] = useState<Ticker[] | undefined>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(()=>{
     async function init() {
       try {
+        setLoading(true);
         const res = await getTickers();
         console.log(res);
         setTickers(res);
+        setLoading(false);
       }
       catch(e){
         console.log(e);
@@ -23,6 +27,10 @@ const Markets = () => {
     }
     init();
   },[])
+
+  if(loading) return <div className="h-screen flex items-center justify-center">
+    <Loading/>
+  </div>
 
   return (
     <div className="flex flex-col flex-1 gap-3 rounded-xl bg-baseBackgroundL1 p-4">
