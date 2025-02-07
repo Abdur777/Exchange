@@ -1,5 +1,6 @@
 import { useRouter } from 'next/navigation'
 import { Ticker } from "../utils/types"
+import { formatVolumeToKMB } from '../utils/formatNumber';
 
 export default function MarketRow({ market }: { market: Ticker }) {
     const router = useRouter()
@@ -29,7 +30,7 @@ export default function MarketRow({ market }: { market: Ticker }) {
               </div>
             </div>
             <div className="ml-2 flex flex-col">
-              <p className="whitespace-nowrap text-base font-medium text-baseTextHighEmphasis">
+              <p className="whitespace-nowrap text-base font-bold text-baseTextHighEmphasis">
                 {market.symbol.split("_")[0]}
               </p>
               <div className="flex items-center justify-start flex-row gap-2">
@@ -42,16 +43,34 @@ export default function MarketRow({ market }: { market: Ticker }) {
         </div>
       </td>
       <td className="text-sm tabular-nums px-2 py-3 last:pr-7 text-right">
-        <p className="text-base font-medium tabular-nums">{market.lastPrice}</p>
+        <div className='flex justify-end gap-0.2'>
+          <p className="text-base font-bold tabular-nums">
+            $
+          </p>
+          <p className="font-inter text-base font-bold tabular-nums">
+            {market.lastPrice}
+          </p>
+        </div>
       </td>
       <td className="text-sm tabular-nums px-2 py-3 last:pr-7 text-right">
-        <p className="text-base font-medium tabular-nums">$123.9B</p>
+        <p className="font-inter text-base font-bold tabular-nums">$123.9B</p>
       </td>
       <td className="text-sm tabular-nums px-2 py-3 last:pr-7 text-right">
-        <p className="text-base font-medium tabular-nums">$2.7M</p>
+        <div className='flex justify-end gap-0.2'>
+          <p className="text-base font-bold tabular-nums">
+            $
+          </p>
+          <p className="font-inter text-base font-bold tabular-nums">
+            {formatVolumeToKMB(market.quoteVolume)}
+          </p>
+        </div>
       </td>
       <td className="text-sm tabular-nums px-2 py-3 last:pr-7 text-right">
-        <p className="text-base font-medium tabular-nums text-redText">
+        <p className={`font-inter text-base font-bold tabular-nums text-redText ${
+                  Number(market.priceChangePercent) > 0
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}>
           {(Number(market.priceChangePercent)*100).toFixed(2)}%
         </p>
       </td>
