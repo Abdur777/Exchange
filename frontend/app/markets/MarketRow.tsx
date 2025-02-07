@@ -1,3 +1,5 @@
+"use client";
+
 import { useRouter } from 'next/navigation'
 import { Ticker } from "../utils/types"
 import { formatVolumeToKMB } from '../utils/formatNumber';
